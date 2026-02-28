@@ -1,16 +1,30 @@
 import axios from "axios";
+import https from "https";
 
-const API_KEY = process.env.OPENWEATHER_KEY;
+const httpsAgent = new https.Agent({
+  family: 4 // force IPv4
+});
 
 export const fetchWeather = async (capital) => {
-  const res = await axios.get(
-    `https://api.openweathermap.org/data/2.5/weather?q=${capital}&units=metric&appid=${API_KEY}`
+  const geoRes = await axios.get(
+    `https://geocoding-api.open-meteo.com/v1/search?name=${capital}&count=1`,
+    { httpsAgent }
+  );
+
+  if (!geoRes.data.results || geoRes.data.results.length === 0) {
+    throw new Error(`Geocoding failed for ${capital}`);
+  }
+
+  const { latitude, longitude } = geoRes.data.results[0];
+
+  const weatherRes = await axios.get(
+    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m`,
+    { httpsAgent }
   );
 
   return {
-    temperature: res.data.main.temp,
-    humidity: res.data.main.humidity,
-    lat: res.data.coord.lat,
-    lon: res.data.coord.lon
+    temperature: weatherRes.data.current.temperature_2m,
+    lat: latitude,
+    lon: longitude
   };
 };

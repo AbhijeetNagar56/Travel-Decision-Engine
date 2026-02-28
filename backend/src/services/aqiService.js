@@ -1,13 +1,17 @@
 import axios from "axios";
+import https from "https";
 
-const API_KEY = process.env.OPENWEATHER_KEY;
+const httpsAgent = new https.Agent({
+  family: 4
+});
 
 export const fetchAQI = async (lat, lon) => {
   const res = await axios.get(
-    `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`
+    `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi`,
+    { httpsAgent }
   );
 
   return {
-    aqi: res.data.list[0].main.aqi * 50
+    aqi: res.data.current.us_aqi || 100
   };
 };

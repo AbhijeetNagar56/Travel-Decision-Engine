@@ -16,50 +16,80 @@ router.post("/", async (req, res) => {
   const requestId = uuidv4();
   const { countries, riskTolerance, duration } = req.body;
 
-  const weights = getWeights(riskTolerance, duration);
+  if (!countries || countries.length < 1) {
+    return res.status(400).json({
+      error: "At least 1 country required"
+    });
+  }
 
-  const results = await Promise.all(
-    countries.map(async (country) => {
-      const cached = getCached(country);
-      if (cached) return cached;
+  try {
+    const weights = getWeights(riskTolerance, duration);
 
-      const profile = await fetchCountryProfile(country);
-      const weather = await fetchWeather(profile.capital);
-      const aqi = await fetchAQI(weather.lat, weather.lon);
+    const results = await Promise.all(
+      countries.map(async (country) => {
+        const cached = getCached(country);
+        if (cached) return cached;
 
-      const aqiScore = normalizeNegative(aqi.aqi, 0, 300);
-      const tempScore = temperatureScore(weather.temperature);
+        const profile = await fetchCountryProfile(country);
 
-      const travelRisk =
-        aqiScore * 0.4 + tempScore * 0.3 + 70 * 0.3;
+        const weather = await fetchWeather(profile.capital);
 
-      const result = {
-        country,
-        scores: {
-          travelRisk,
-          healthInfrastructure: 70,
-          environmentalStability: (aqiScore + tempScore) / 2
-        }
-      };
+        const aqi = await fetchAQI(weather.lat, weather.lon);
 
-      setCache(country, result);
+        const aqiScore = normalizeNegative(aqi.aqi, 0, 300);
+        const tempScore = temperatureScore(weather.temperature);
 
-      return result;
-    })
-  );
+        const travelRisk =
+          aqiScore * 0.4 +
+          tempScore * 0.3 +
+          70 * 0.3; // fixed health placeholder
 
-  const ranked = results.sort(
-    (a, b) => b.scores.travelRisk - a.scores.travelRisk
-  );
+        const environmentalStability =
+          (aqiScore + tempScore) / 2;
 
-  res.json({
-    metadata: {
-      requestId,
-      riskTolerance,
-      duration
-    },
-    ranking: ranked
-  });
+        const overall =
+          travelRisk * weights.travelWeight +
+          70 * weights.healthWeight +
+          environmentalStability * weights.environmentWeight;
+
+        const result = {
+          country,
+          scores: {
+            travelRisk: Number(travelRisk.toFixed(2)),
+            healthInfrastructure: 70,
+            environmentalStability: Number(
+              environmentalStability.toFixed(2)
+            ),
+            overall: Number(overall.toFixed(2))
+          }
+        };
+
+        setCache(country, result);
+
+        return result;
+      })
+    );
+
+    const ranked = results.sort(
+      (a, b) => b.scores.overall - a.scores.overall
+    );
+
+    res.json({
+      metadata: {
+        requestId,
+        riskTolerance,
+        duration
+      },
+      ranking: ranked
+    });
+
+  } catch (error) {
+    console.error("FULL ERROR:", error);
+    res.status(500).json({
+      error: "Analysis failed",
+      message: error.message
+    });
+  }
 });
 
 export default router;
