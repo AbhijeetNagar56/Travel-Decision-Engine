@@ -1,0 +1,45 @@
+src/
+ ├── routes/
+ │    └── analyze.js
+ ├── services/
+ │    ├── countryService.js
+ │    ├── weatherService.js
+ │    ├── aqiService.js
+ │    ├── advisoryService.js
+ ├── scoring/
+ │    ├── normalization.js
+ │    ├── riskScore.js
+ │    ├── healthScore.js
+ │    ├── environmentalScore.js
+ │    ├── weightingEngine.js
+ ├── cache/
+ │    └── redisClient.js
+ ├── utils/
+ │    └── logger.js
+
+
+
+ output
+
+ {
+  "metadata": {
+    "timestamp": "",
+    "riskTolerance": "Low",
+    "duration": "Long-term",
+    "cacheHits": 2,
+    "cacheMisses": 1
+  },
+  "ranking": [
+    {
+      "rank": 1,
+      "country": "CountryName",
+      "scores": {
+        "travelRisk": 82,
+        "healthInfrastructure": 75,
+        "environmentalStability": 88,
+        "overall": 84
+      },
+      "reasoning": "Strong healthcare system and low AQI offset moderate advisory risk."
+    }
+  ]
+}
