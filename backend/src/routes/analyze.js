@@ -55,6 +55,7 @@ router.post("/", async (req, res) => {
           const aqi = await fetchAQI(weather.lat, weather.lon);
 
           // 🔹 Normalize Factors
+          // 🔹 Normalize Factors
           const aqiScore = normalizeNegative(aqi.aqi, 0, 300);
           const tempScore = temperatureScore(weather.temperature);
 
@@ -71,8 +72,10 @@ router.post("/", async (req, res) => {
           const environmentalStability =
             (aqiScore + tempScore) / 2;
 
-          // Health Infrastructure (placeholder positive)
-          const healthInfrastructure = 70;
+          // Health Infrastructure (dynamic)
+          const healthInfrastructure =
+            (100 - aqiScore) * 0.6 +
+            tempScore * 0.4;
 
           // Final Overall Score (higher = better)
           const overall =
