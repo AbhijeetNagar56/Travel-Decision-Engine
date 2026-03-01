@@ -1,6 +1,6 @@
 # 🚀 Travel Decision Engine
 
-**Travel Decision Engine** is a **multi-factor decision intelligence system** designed to assist travelers and applications by evaluating countries based on diverse risk and suitability criteria. It combines environmental indicators, health infrastructure, advisories, and user-specified tolerance to give ranked output for informed travel planning. :contentReference[oaicite:2]{index=2}
+**Travel Decision Engine** is a **multi-factor decision intelligence system** designed to assist travelers and applications by evaluating countries based on diverse risk and suitability criteria. It combines environmental indicators, health infrastructure, advisories, and user-specified tolerance to give ranked output for informed travel planning.
 
 ---
 
