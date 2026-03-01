@@ -340,7 +340,7 @@ export default function App() {
     setLoading(true);
     setResponse(null);
     try {
-      const res = await axios.post("http://localhost:5000/api/analyze", {
+      const res = await axios.post("/api/analyze", {
         countries: Array.from(selected),
         riskTolerance: "Low",
         duration: "Short-term",
