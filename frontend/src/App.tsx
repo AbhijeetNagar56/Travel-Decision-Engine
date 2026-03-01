@@ -381,7 +381,7 @@ export default function App() {
           backgroundSize: "40px 40px",
         }}
       />
-      <div className="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#3B82F6] to-transparent" />
+      <div className="fixed top-0 left-0 right-0 h-[2px] bg-linear-to-r from-transparent via-[#3B82F6] to-transparent" />
 
       {response?.metadata && <MetaBar meta={response.metadata} />}
 
