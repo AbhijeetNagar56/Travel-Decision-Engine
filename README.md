@@ -26,12 +26,12 @@ Each country is scored using a multi-factor approach that includes:
 - **Risk Score** – Advisory and security risk analysis  
 - **Health Score** – Healthcare infrastructure and disease risk  
 - **Environmental Score** – Air quality and climate stability  
-- **Overall Score** – Weighted aggregate of all factors :contentReference[oaicite:3]{index=3}
+- **Overall Score** – Weighted aggregate of all factors
 
-These scores are normalized and computed using configurable logic in the scoring engine. :contentReference[oaicite:4]{index=4}
+These scores are normalized and computed using configurable logic in the scoring engine.
 
 ### 🔄 Caching
-Responses can be cached using Redis to reduce repeated computation and speed up scoring. :contentReference[oaicite:5]{index=5}
+Responses can be cached using Redis to reduce repeated computation and speed up scoring.
 
 
 
@@ -46,7 +46,7 @@ The backend is built using **JavaScript/TypeScript (Node.js)** and depends on:
 - Redis (optional but recommended)
 - External country, advisory, weather, and AQI APIs
 
-See `package.json` for full dependencies. :contentReference[oaicite:7]{index=7}
+See `package.json` for full dependencies.
 
 ---
 
@@ -57,10 +57,6 @@ See `package.json` for full dependencies. :contentReference[oaicite:7]{index=7}
 ```bash
 git clone https://github.com/AbhijeetNagar56/Travel-Decision-Engine.git
 cd Travel-Decision-Engine
-npm install
-# or
-yarn install
-```
-```
+npm build # or yarn build
 npm start
 ```
